@@ -187,33 +187,40 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const type = document.getElementById('type').value;
-  const from = document.getElementById('from').value;
-  const to = document.getElementById('to').value;
-  const content = document.getElementById('content').value;
+  const from = document.getElementById('from').value || '';
+  const to = document.getElementById('to').value || '';
+  const content = document.getElementById('content').value || '';
+
+  if (!type || !content) {
+    alert("Please choose a category and enter content.");
+    return;
+  }
 
   const payload = { type, from, to, content };
 
   try {
     const response = await fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(payload)
     });
 
-    const result = await response.json();
+    // If your script is set to "no-cors" access, use response.text()
+    const resultText = await response.text();
+    console.log("Response from server:", resultText);
 
-    if (result.status === 'success') {
-      form.reset();
-      formFields.classList.add('hidden');
-      confirmation.classList.remove('hidden');
-      loadSiteContent(); // Refresh content
-    } else {
-      console.error('Submission error:', result.message);
-    }
+    form.reset();
+    formFields.classList.add('hidden');
+    confirmation.classList.remove('hidden');
+    loadSiteContent();
   } catch (error) {
+    alert("Failed to submit. Check the console for details.");
     console.error('Fetch error:', error);
   }
 });
+
 
 
 editAboutBtn.addEventListener('click', () => {
