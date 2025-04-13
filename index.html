@@ -81,17 +81,17 @@
 </head>
 <body>
 
-  <header>
-    <h1>Jess Is Right</h1>
-    <p>Where Jess is always right.</p>
-  </header>
+<header>
+  <h1>Jess Is Right</h1>
+  <p>Where Jess is always right.</p>
+</header>
 
-  <nav>
-    <a href="#about">About Jess</a>
-    <a href="#list">The Right List</a>
-    <a href="#quotes">Quotes</a>
-    <a href="#submit">Submit a Moment</a>
-  </nav>
+<nav>
+  <a href="#about">About Jess</a>
+  <a href="#list">The Right List</a>
+  <a href="#quotes">Quotes</a>
+  <a href="#submit">Submit a Moment</a>
+</nav>
 
 <section id="about">
   <h2>About Jess <button id="editAboutBtn" class="hidden">✏️ Edit</button></h2>
@@ -100,187 +100,170 @@
   <button id="saveAboutBtn" class="hidden" style="margin-top: 0.5rem;">💾 Save</button>
 </section>
 
+<section id="list">
+  <h2>The Right List</h2>
+  <ul>
+    <li>"You know I'm always right!" – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></li>
+  </ul>
+</section>
 
-  <section id="list">
-    <h2>The Right List</h2>
-    <ul>
-      <li>"You know im always right!" – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></li>
-    </ul>
-  </section>
+<section id="quotes">
+  <h2>Quotes</h2>
+  <blockquote>“I'm always right.” – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></blockquote>
+</section>
 
-  <section id="quotes">
-    <h2>Quotes</h2>
-      <blockquote>“I'm always right.” – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></blockquote>
-  </section>
-
-  <section id="submit">
-    <h2>Submit a Moment</h2>
-    <form id="momentForm">
-      <label for="pin">Enter Special PIN:</label>
-      <input type="password" id="pin" placeholder="Enter PIN" autocomplete="off" required />
-
-      <div id="formFields" class="hidden">
-        <label for="type">Choose Category:</label>
-        <select id="type" required>
-          <option value="">--Select--</option>
-          <option value="The Right List">The Right List</option>
-          <option value="Quotes">Quotes</option>
-        </select>
-
-        <label for="from">From:</label>
-        <input type="text" id="from" placeholder="Your name" />
-
-        <label for="to">To (Jess?):</label>
-        <input type="text" id="to" placeholder="Who was right?" />
-
-        <label for="content">Your Moment:</label>
-        <textarea id="content" rows="4" placeholder="Tell your story..." required></textarea>
-
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-    <div id="confirmation" class="submitted-message hidden">
-      ✅ Your moment was submitted (locally)!
+<section id="submit">
+  <h2>Submit a Moment</h2>
+  <form id="momentForm">
+    <label for="pin">Enter Special PIN:</label>
+    <input type="password" id="pin" placeholder="Enter PIN" autocomplete="off" required />
+    <div id="formFields" class="hidden">
+      <label for="type">Choose Category:</label>
+      <select id="type" required>
+        <option value="">--Select--</option>
+        <option value="The Right List">The Right List</option>
+        <option value="Quotes">Quotes</option>
+      </select>
+      <label for="from">From:</label>
+      <input type="text" id="from" placeholder="Your name" />
+      <label for="to">To (Jess?):</label>
+      <input type="text" id="to" placeholder="Who was right?" />
+      <label for="content">Your Moment:</label>
+      <textarea id="content" rows="4" placeholder="Tell your story..." required></textarea>
+      <button type="submit">Submit</button>
     </div>
-  </section>
+  </form>
+  <div id="confirmation" class="submitted-message hidden">
+    ✅ Your moment was submitted!
+  </div>
+</section>
 
 <footer>
   <p>&copy; 2025 Jess Is Right • <span id="version">{{VERSION}}</span></p>
 </footer>
 
-
 <script>
-  const pinInput = document.getElementById('pin');
-  const formFields = document.getElementById('formFields');
-  const form = document.getElementById('momentForm');
-  const confirmation = document.getElementById('confirmation');
+const pinInput = document.getElementById('pin');
+const formFields = document.getElementById('formFields');
+const form = document.getElementById('momentForm');
+const confirmation = document.getElementById('confirmation');
 
-  const rightList = document.querySelector('#list ul');
-  const quotesSection = document.querySelector('#quotes');
+const rightList = document.querySelector('#list ul');
+const quotesSection = document.querySelector('#quotes');
 
-  const aboutText = document.getElementById('aboutText');
-  const aboutEditBox = document.getElementById('aboutEditBox');
-  const editAboutBtn = document.getElementById('editAboutBtn');
-  const saveAboutBtn = document.getElementById('saveAboutBtn');
+const aboutText = document.getElementById('aboutText');
+const aboutEditBox = document.getElementById('aboutEditBox');
+const editAboutBtn = document.getElementById('editAboutBtn');
+const saveAboutBtn = document.getElementById('saveAboutBtn');
 
-  function showAdminTools() {
-    editAboutBtn.classList.remove('hidden');
-    Array.from(document.querySelectorAll('.deletable')).forEach(el => el.classList.remove('hidden'));
-  }
+function showAdminTools() {
+  editAboutBtn.classList.remove('hidden');
+  Array.from(document.querySelectorAll('.deletable')).forEach(el => el.classList.remove('hidden'));
+}
 
-  pinInput.addEventListener('input', () => {
-    if (pinInput.value === '1122') {
-      formFields.classList.remove('hidden');
-      showAdminTools();
-    } else {
-      formFields.classList.add('hidden');
-    }
-  });
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-
-    const type = document.getElementById('type').value;
-    const from = document.getElementById('from').value;
-    const to = document.getElementById('to').value;
-    const content = document.getElementById('content').value;
-
-    const payload = {
-      type,
-      from,
-      to,
-      content
-    };
-
-    fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    form.reset();
+pinInput.addEventListener('input', () => {
+  if (pinInput.value === '1122') {
+    formFields.classList.remove('hidden');
+    showAdminTools();
+  } else {
     formFields.classList.add('hidden');
-    confirmation.classList.remove('hidden');
-
-    // Optional: Reload data to reflect the new submission immediately
-    setTimeout(() => {
-      loadSiteContent();
-    }, 1000);
-  });
-
-  editAboutBtn.addEventListener('click', () => {
-    aboutEditBox.value = aboutText.textContent;
-    aboutEditBox.classList.remove('hidden');
-    saveAboutBtn.classList.remove('hidden');
-    editAboutBtn.classList.add('hidden');
-  });
-
-  saveAboutBtn.addEventListener('click', () => {
-    const updatedAbout = aboutEditBox.value;
-    aboutText.textContent = updatedAbout;
-    aboutEditBox.classList.add('hidden');
-    saveAboutBtn.classList.add('hidden');
-    editAboutBtn.classList.remove('hidden');
-
-    const payload = {
-      type: 'AboutJess',
-      content: updatedAbout
-    };
-
-    fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-  });
-
-  // Load data from Sheets
-  async function loadSiteContent() {
-    const url = "https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec";
-
-    try {
-      const res = await fetch(url);
-      const data = await res.json();
-
-      // Load About Jess
-      if (data.AboutJess && data.AboutJess.length > 0) {
-        aboutText.textContent = data.AboutJess[0].content;
-      }
-
-      // Load Right List
-      rightList.innerHTML = "";
-      data.RightList.forEach(item => {
-        const li = document.createElement("li");
-        li.innerHTML = `"${item.content}" – ${item.to || "Jess"}${item.from ? " (submitted by " + item.from + ")" : ""} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
-        rightList.appendChild(li);
-      });
-
-      // Load Quotes
-      quotesSection.querySelectorAll("blockquote").forEach(el => el.remove());
-      data.Quotes.forEach(quote => {
-        const bq = document.createElement("blockquote");
-        bq.innerHTML = `"${quote.content}" – ${quote.to || "Jess"} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
-        quotesSection.appendChild(bq);
-      });
-
-      // Re-show admin tools if unlocked
-      if (pinInput.value === '1122') {
-        showAdminTools();
-      }
-    } catch (err) {
-      console.error("Failed to load content from Sheets:", err);
-    }
   }
+});
 
-  window.addEventListener("DOMContentLoaded", loadSiteContent);
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const type = document.getElementById('type').value;
+  const from = document.getElementById('from').value;
+  const to = document.getElementById('to').value;
+  const content = document.getElementById('content').value;
+
+  const payload = { type, from, to, content };
+  fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
+    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  form.reset();
+  formFields.classList.add('hidden');
+  confirmation.classList.remove('hidden');
+  setTimeout(() => { loadSiteContent(); }, 1000);
+});
+
+editAboutBtn.addEventListener('click', () => {
+  aboutEditBox.value = aboutText.textContent;
+  aboutEditBox.classList.remove('hidden');
+  saveAboutBtn.classList.remove('hidden');
+  editAboutBtn.classList.add('hidden');
+});
+
+saveAboutBtn.addEventListener('click', () => {
+  const updatedAbout = aboutEditBox.value;
+  aboutText.textContent = updatedAbout;
+  aboutEditBox.classList.add('hidden');
+  saveAboutBtn.classList.add('hidden');
+  editAboutBtn.classList.remove('hidden');
+  fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
+    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ type: 'AboutJess', content: updatedAbout })
+  });
+});
+
+async function loadSiteContent() {
+  const url = "https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec";
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.AboutJess?.length) aboutText.textContent = data.AboutJess[0].content;
+
+    rightList.innerHTML = "";
+    data.RightList.forEach(item => {
+      const li = document.createElement("li");
+      li.innerHTML = `"${item.content}" – ${item.to || "Jess"}${item.from ? " (submitted by " + item.from + ")" : ""} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
+      rightList.appendChild(li);
+    });
+
+    quotesSection.querySelectorAll("blockquote").forEach(el => el.remove());
+    data.Quotes.forEach(quote => {
+      const bq = document.createElement("blockquote");
+      bq.innerHTML = `"${quote.content}" – ${quote.to || "Jess"} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
+      quotesSection.appendChild(bq);
+    });
+
+    if (pinInput.value === '1122') showAdminTools();
+  } catch (err) {
+    console.error("Failed to load content from Sheets:", err);
+  }
+}
+
+function seedSiteContentToSheets() {
+  const url = "https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec";
+  const about = aboutText.textContent.trim();
+  if (about) {
+    fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'AboutJess', content: about }) });
+  }
+  document.querySelectorAll("#list ul li").forEach(li => {
+    const raw = li.textContent.replace("🗑️", "").trim();
+    const match = raw.match(/^"(.*)" – (.*?)( \(submitted by (.*)\))?$/);
+    const content = match?.[1] || raw;
+    const to = match?.[2] || "Jess";
+    const from = match?.[4] || "";
+    fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "The Right List", content, from, to }) });
+  });
+  document.querySelectorAll("#quotes blockquote").forEach(bq => {
+    const raw = bq.textContent.replace("🗑️", "").trim();
+    const match = raw.match(/^"(.*)" – (.*)$/);
+    const content = match?.[1] || raw;
+    const to = match?.[2] || "Jess";
+    fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "Quotes", content, from: "", to }) });
+  });
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  await loadSiteContent();
+  seedSiteContentToSheets(); // always push visible stuff to Sheets
+});
 </script>
-
 
 </body>
 </html>
