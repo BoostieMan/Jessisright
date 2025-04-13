@@ -170,18 +170,38 @@ pinInput.addEventListener('input', () => {
   }
 });
 
-form.addEventListener('submit', (e) => {
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const type = document.getElementById('type').value;
   const from = document.getElementById('from').value;
   const to = document.getElementById('to').value;
   const content = document.getElementById('content').value;
 
   const payload = { type, from, to, content };
-  fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
-    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
+
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (result.status === 'success') {
+      form.reset();
+      formFields.classList.add('hidden');
+      confirmation.classList.remove('hidden');
+      loadSiteContent(); // Refresh content
+    } else {
+      console.error('Submission error:', result.message);
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+  }
+});
+
 
   form.reset();
   formFields.classList.add('hidden');
