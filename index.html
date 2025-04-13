@@ -148,27 +148,47 @@
     <p>&copy; 2025 Jess Is Right</p>
   </footer>
 
-  <script>
-    const pinInput = document.getElementById('pin');
-    const formFields = document.getElementById('formFields');
-    const form = document.getElementById('momentForm');
-    const confirmation = document.getElementById('confirmation');
+<script>
+  const pinInput = document.getElementById('pin');
+  const formFields = document.getElementById('formFields');
+  const form = document.getElementById('momentForm');
+  const confirmation = document.getElementById('confirmation');
 
-    pinInput.addEventListener('input', () => {
-      if (pinInput.value === '1122') {
-        formFields.classList.remove('hidden');
-      } else {
-        formFields.classList.add('hidden');
-      }
-    });
+  const rightList = document.querySelector('#list ul');
+  const quotesSection = document.querySelector('#quotes');
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      form.reset();
+  pinInput.addEventListener('input', () => {
+    if (pinInput.value === '1122') {
+      formFields.classList.remove('hidden');
+    } else {
       formFields.classList.add('hidden');
-      confirmation.classList.remove('hidden');
-    });
-  </script>
+    }
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const type = document.getElementById('type').value;
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    const content = document.getElementById('content').value;
+
+    if (type === 'The Right List') {
+      const li = document.createElement('li');
+      li.textContent = `"${content}" – ${to || 'Jess'}${from ? ' (submitted by ' + from + ')' : ''}`;
+      rightList.appendChild(li);
+    } else if (type === 'Quotes') {
+      const blockquote = document.createElement('blockquote');
+      blockquote.textContent = `"${content}" – ${to || 'Jess'}`;
+      quotesSection.appendChild(blockquote);
+    }
+
+    form.reset();
+    formFields.classList.add('hidden');
+    confirmation.classList.remove('hidden');
+  });
+</script>
+
 
 </body>
 </html>
