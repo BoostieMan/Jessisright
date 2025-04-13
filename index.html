@@ -237,7 +237,7 @@ saveAboutBtn.addEventListener('click', () => {
   saveAboutBtn.classList.add('hidden');
   editAboutBtn.classList.remove('hidden');
   fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
-    method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' },
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ type: 'AboutJess', content: updatedAbout })
   });
 });
@@ -278,7 +278,6 @@ function seedSiteContentToSheets() {
   if (about) {
     fetch(url, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: 'AboutJess', content: about })
     });
@@ -293,7 +292,6 @@ function seedSiteContentToSheets() {
     const from = match?.[4] || "";
     fetch(url, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: "RightList", content, from, to })
     });
@@ -307,7 +305,6 @@ function seedSiteContentToSheets() {
     const to = match?.[2] || "Jess";
     fetch(url, {
       method: 'POST',
-      mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ type: "Quotes", content, from: "", to })
     });
