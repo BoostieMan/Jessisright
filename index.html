@@ -236,11 +236,21 @@ saveAboutBtn.addEventListener('click', () => {
   aboutEditBox.classList.add('hidden');
   saveAboutBtn.classList.add('hidden');
   editAboutBtn.classList.remove('hidden');
-  fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ type: 'AboutJess', content: updatedAbout })
-  });
+fetch('https://script.google.com/macros/s/AKfycbyqQDbKgXwxiW8UpjMCLsZXBIdpofxS5lfKSof2dJWHPCYPdXlfCqksFAtbndkuWpzd8A/exec', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(payload)
+})
+.then(response => response.json())
+.then(data => {
+  // Handle success
+})
+.catch(error => {
+  // Handle error
 });
+
 
 async function loadSiteContent() {
   const url = "https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec";
