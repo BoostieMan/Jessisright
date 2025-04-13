@@ -1,15 +1,18 @@
 const fs = require('fs');
 
-const filePath = 'index.html';
+const htmlFile = 'index.html';
+const versionFile = 'version.txt';
 const sha = process.env.GITHUB_SHA?.substring(0, 7) || 'unknown';
 
-fs.readFile(filePath, 'utf8', (err, data) => {
+const version = fs.existsSync(versionFile) ? fs.readFileSync(versionFile, 'utf8').trim() : '0.0';
+
+fs.readFile(htmlFile, 'utf8', (err, data) => {
   if (err) throw err;
 
-  const result = data.replace('{{VERSION}}', `#${sha}`);
+  const result = data.replace('{{VERSION}}', `Version: ${version} (#${sha})`);
 
-  fs.writeFile(filePath, result, 'utf8', (err) => {
+  fs.writeFile(htmlFile, result, 'utf8', (err) => {
     if (err) throw err;
-    console.log(`Version injected: #${sha}`);
+    console.log(`Version injected: Version: ${version} (#${sha})`);
   });
 });
