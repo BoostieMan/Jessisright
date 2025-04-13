@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jess Is Right</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f5f0fa;
+      font-family: 'Inter', sans-serif;
+      background-color: #f0fdf4;
       color: #333;
       margin: 0;
       padding: 0;
     }
     header {
-      background-color: #c29fff;
+      background-color: #34d399;
       color: white;
       text-align: center;
-      padding: 2rem;
+      padding: 3rem 1rem;
     }
     nav {
-      background: #eee;
+      background: #e0f2f1;
       padding: 1rem;
       text-align: center;
     }
     nav a {
       margin: 0 1rem;
-      color: #663399;
+      color: #065f46;
       text-decoration: none;
       font-weight: bold;
     }
@@ -35,11 +36,46 @@
       margin: auto;
     }
     footer {
-      background-color: #c29fff;
+      background-color: #34d399;
       color: white;
       text-align: center;
       padding: 1rem;
       margin-top: 2rem;
+    }
+    h2 {
+      border-bottom: 2px solid #d1fae5;
+      padding-bottom: 0.5rem;
+    }
+    form {
+      background: #ffffff;
+      border: 1px solid #d1fae5;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.75rem;
+      border-radius: 5px;
+      border: 1px solid #cbd5e1;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #34d399;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    .submitted-message {
+      margin-top: 1rem;
+      background-color: #ecfdf5;
+      padding: 1rem;
+      border-radius: 5px;
+      border: 1px solid #a7f3d0;
     }
   </style>
 </head>
@@ -79,12 +115,60 @@
 
   <section id="submit">
     <h2>Submit a Moment</h2>
-    <p>Know a time Jess was right? <a href="mailto:jess@jessisright.com">Email it to us!</a></p>
+    <form id="momentForm">
+      <label for="pin">Enter Special PIN:</label>
+      <input type="password" id="pin" placeholder="1122" required />
+
+      <div id="formFields" class="hidden">
+        <label for="type">Choose Category:</label>
+        <select id="type" required>
+          <option value="">--Select--</option>
+          <option value="The Right List">The Right List</option>
+          <option value="Quotes">Quotes</option>
+        </select>
+
+        <label for="from">From:</label>
+        <input type="text" id="from" placeholder="Your name" />
+
+        <label for="to">To (Jess?):</label>
+        <input type="text" id="to" placeholder="Who was right?" />
+
+        <label for="content">Your Moment:</label>
+        <textarea id="content" rows="4" placeholder="Tell your story..." required></textarea>
+
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+    <div id="confirmation" class="submitted-message hidden">
+      ✅ Your moment was submitted (locally)!
+    </div>
   </section>
 
   <footer>
     <p>&copy; 2025 Jess Is Right</p>
   </footer>
+
+  <script>
+    const pinInput = document.getElementById('pin');
+    const formFields = document.getElementById('formFields');
+    const form = document.getElementById('momentForm');
+    const confirmation = document.getElementById('confirmation');
+
+    pinInput.addEventListener('input', () => {
+      if (pinInput.value === '1122') {
+        formFields.classList.remove('hidden');
+      } else {
+        formFields.classList.add('hidden');
+      }
+    });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      form.reset();
+      formFields.classList.add('hidden');
+      confirmation.classList.remove('hidden');
+    });
+  </script>
 
 </body>
 </html>
