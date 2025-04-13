@@ -265,26 +265,48 @@ async function loadSiteContent() {
 
 function seedSiteContentToSheets() {
   const url = "https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec";
+
+  // Push About Jess (just overwrite A2)
   const about = aboutText.textContent.trim();
   if (about) {
-    fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'AboutJess', content: about }) });
+    fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'AboutJess', content: about })
+    });
   }
+
+  // Push all RightList items
   document.querySelectorAll("#list ul li").forEach(li => {
     const raw = li.textContent.replace("🗑️", "").trim();
     const match = raw.match(/^"(.*)" – (.*?)( \(submitted by (.*)\))?$/);
     const content = match?.[1] || raw;
     const to = match?.[2] || "Jess";
     const from = match?.[4] || "";
-    fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "The Right List", content, from, to }) });
+    fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: "RightList", content, from, to })
+    });
   });
+
+  // Push all Quotes
   document.querySelectorAll("#quotes blockquote").forEach(bq => {
     const raw = bq.textContent.replace("🗑️", "").trim();
     const match = raw.match(/^"(.*)" – (.*)$/);
     const content = match?.[1] || raw;
     const to = match?.[2] || "Jess";
-    fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ type: "Quotes", content, from: "", to }) });
+    fetch(url, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: "Quotes", content, from: "", to })
+    });
   });
 }
+
 
 window.addEventListener("DOMContentLoaded", async () => {
   await loadSiteContent();
