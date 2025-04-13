@@ -161,14 +161,19 @@ function showAdminTools() {
   Array.from(document.querySelectorAll('.deletable')).forEach(el => el.classList.remove('hidden'));
 }
 
-pinInput.addEventListener('input', () => {
+function checkPinUnlock() {
   if (pinInput.value === '1122') {
     formFields.classList.remove('hidden');
     showAdminTools();
   } else {
     formFields.classList.add('hidden');
   }
-});
+}
+
+// Trigger PIN check on input blur or change
+pinInput.addEventListener('change', checkPinUnlock);
+pinInput.addEventListener('blur', checkPinUnlock);
+
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
