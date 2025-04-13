@@ -185,20 +185,30 @@
     const to = document.getElementById('to').value;
     const content = document.getElementById('content').value;
 
-    if (type === 'The Right List') {
-      const li = document.createElement('li');
-      li.innerHTML = `"${content}" – ${to || 'Jess'}${from ? ' (submitted by ' + from + ')' : ''} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
-      rightList.appendChild(li);
-    } else if (type === 'Quotes') {
-      const blockquote = document.createElement('blockquote');
-      blockquote.innerHTML = `"${content}" – ${to || 'Jess'} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
-      quotesSection.appendChild(blockquote);
-    }
+    const payload = {
+      type,
+      from,
+      to,
+      content
+    };
+
+    fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
     form.reset();
     formFields.classList.add('hidden');
     confirmation.classList.remove('hidden');
-    showAdminTools();
+
+    // Optional: Reload data to reflect the new submission immediately
+    setTimeout(() => {
+      loadSiteContent();
+    }, 1000);
   });
 
   editAboutBtn.addEventListener('click', () => {
@@ -209,13 +219,67 @@
   });
 
   saveAboutBtn.addEventListener('click', () => {
-    aboutText.textContent = aboutEditBox.value;
+    const updatedAbout = aboutEditBox.value;
+    aboutText.textContent = updatedAbout;
     aboutEditBox.classList.add('hidden');
     saveAboutBtn.classList.add('hidden');
     editAboutBtn.classList.remove('hidden');
-  });
-</script>
 
+    const payload = {
+      type: 'AboutJess',
+      content: updatedAbout
+    };
+
+    fetch('https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec', {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+  });
+
+  // Load data from Sheets
+  async function loadSiteContent() {
+    const url = "https://script.google.com/macros/s/AKfycbwvTMBLpBjSjmflRGaxSKzETVFX3sMFFwzFruSyDzUt5th2G859EmSi1afNfA9YGrNoGw/exec";
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      // Load About Jess
+      if (data.AboutJess && data.AboutJess.length > 0) {
+        aboutText.textContent = data.AboutJess[0].content;
+      }
+
+      // Load Right List
+      rightList.innerHTML = "";
+      data.RightList.forEach(item => {
+        const li = document.createElement("li");
+        li.innerHTML = `"${item.content}" – ${item.to || "Jess"}${item.from ? " (submitted by " + item.from + ")" : ""} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
+        rightList.appendChild(li);
+      });
+
+      // Load Quotes
+      quotesSection.querySelectorAll("blockquote").forEach(el => el.remove());
+      data.Quotes.forEach(quote => {
+        const bq = document.createElement("blockquote");
+        bq.innerHTML = `"${quote.content}" – ${quote.to || "Jess"} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
+        quotesSection.appendChild(bq);
+      });
+
+      // Re-show admin tools if unlocked
+      if (pinInput.value === '1122') {
+        showAdminTools();
+      }
+    } catch (err) {
+      console.error("Failed to load content from Sheets:", err);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", loadSiteContent);
+</script>
 
 
 </body>
