@@ -93,24 +93,24 @@
     <a href="#submit">Submit a Moment</a>
   </nav>
 
-  <section id="about">
-    <h2>About Jess</h2>
-    <p>Jess is your go-to guru for everything from life hacks to bold predictions. This site celebrates her legendary rightness, because let's face it—she's rarely wrong.</p>
-  </section>
+<section id="about">
+  <h2>About Jess <button id="editAboutBtn" class="hidden">✏️ Edit</button></h2>
+  <p id="aboutText">Jess is your go-to guru for everything from life hacks to bold predictions. This site celebrates her legendary rightness, because let's face it—she's NEVER wrong.</p>
+  <textarea id="aboutEditBox" class="hidden" rows="4" style="width:100%; margin-top:1rem;"></textarea>
+  <button id="saveAboutBtn" class="hidden" style="margin-top: 0.5rem;">💾 Save</button>
+</section>
+
 
   <section id="list">
     <h2>The Right List</h2>
     <ul>
-      <li>"You should buy Apple stock in 2008." – Jess (She was right!)</li>
-      <li>"Don't trust the weather app—it’s gonna rain." – It rained.</li>
-      <li>"He's gonna ghost you." – Guess what? He did.</li>
+      <li>"You should buy Apple stock in 2008." – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></li>
     </ul>
   </section>
 
   <section id="quotes">
     <h2>Quotes</h2>
-    <blockquote>“I told you so.” – Jess</blockquote>
-    <blockquote>“It’s just common sense.” – Jess</blockquote>
+      <blockquote>“I'm always right.” – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></blockquote>
   </section>
 
   <section id="submit">
@@ -158,9 +158,20 @@
   const rightList = document.querySelector('#list ul');
   const quotesSection = document.querySelector('#quotes');
 
+  const aboutText = document.getElementById('aboutText');
+  const aboutEditBox = document.getElementById('aboutEditBox');
+  const editAboutBtn = document.getElementById('editAboutBtn');
+  const saveAboutBtn = document.getElementById('saveAboutBtn');
+
+  function showAdminTools() {
+    editAboutBtn.classList.remove('hidden');
+    Array.from(document.querySelectorAll('.deletable')).forEach(el => el.classList.remove('hidden'));
+  }
+
   pinInput.addEventListener('input', () => {
     if (pinInput.value === '1122') {
       formFields.classList.remove('hidden');
+      showAdminTools();
     } else {
       formFields.classList.add('hidden');
     }
@@ -176,19 +187,35 @@
 
     if (type === 'The Right List') {
       const li = document.createElement('li');
-      li.textContent = `"${content}" – ${to || 'Jess'}${from ? ' (submitted by ' + from + ')' : ''}`;
+      li.innerHTML = `"${content}" – ${to || 'Jess'}${from ? ' (submitted by ' + from + ')' : ''} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
       rightList.appendChild(li);
     } else if (type === 'Quotes') {
       const blockquote = document.createElement('blockquote');
-      blockquote.textContent = `"${content}" – ${to || 'Jess'}`;
+      blockquote.innerHTML = `"${content}" – ${to || 'Jess'} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>`;
       quotesSection.appendChild(blockquote);
     }
 
     form.reset();
     formFields.classList.add('hidden');
     confirmation.classList.remove('hidden');
+    showAdminTools();
+  });
+
+  editAboutBtn.addEventListener('click', () => {
+    aboutEditBox.value = aboutText.textContent;
+    aboutEditBox.classList.remove('hidden');
+    saveAboutBtn.classList.remove('hidden');
+    editAboutBtn.classList.add('hidden');
+  });
+
+  saveAboutBtn.addEventListener('click', () => {
+    aboutText.textContent = aboutEditBox.value;
+    aboutEditBox.classList.add('hidden');
+    saveAboutBtn.classList.add('hidden');
+    editAboutBtn.classList.remove('hidden');
   });
 </script>
+
 
 
 </body>
