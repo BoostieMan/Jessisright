@@ -171,10 +171,17 @@ function checkPinUnlock() {
   }
 }
 
-// Trigger PIN check on input blur or change
-pinInput.addEventListener('change', checkPinUnlock);
-pinInput.addEventListener('blur', checkPinUnlock);
 
+const checkPinBtn = document.getElementById('checkPinBtn');
+
+checkPinBtn.addEventListener('click', () => {
+  if (pinInput.value === '1122') {
+    formFields.classList.remove('hidden');
+    showAdminTools();
+  } else {
+    alert("Incorrect PIN. Try again.");
+  }
+});
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -208,12 +215,6 @@ form.addEventListener('submit', async (e) => {
   }
 });
 
-
-  form.reset();
-  formFields.classList.add('hidden');
-  confirmation.classList.remove('hidden');
-  setTimeout(() => { loadSiteContent(); }, 1000);
-});
 
 editAboutBtn.addEventListener('click', () => {
   aboutEditBox.value = aboutText.textContent;
