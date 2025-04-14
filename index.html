@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jess Is Right</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
@@ -23,7 +23,7 @@
 
 <section id="about">
   <h2>About Jess <button id="editAboutBtn" class="hidden">✏️ Edit</button></h2>
-  <p id="aboutText"></p>
+  <p id="aboutText">Loading...</p>
   <textarea id="aboutEditBox" class="hidden" rows="4"></textarea>
   <button id="saveAboutBtn" class="hidden">💾 Save</button>
 </section>
@@ -44,6 +44,7 @@
     <label for="pin">Enter Special PIN:</label>
     <input type="password" id="pin" placeholder="Enter PIN" autocomplete="off" />
     <button type="button" id="checkPinBtn">🔓 Unlock</button>
+
     <div id="formFields" class="hidden">
       <label for="type">Choose Category:</label>
       <select id="type" required>
@@ -51,15 +52,20 @@
         <option value="RightList">The Right List</option>
         <option value="Quotes">Quotes</option>
       </select>
+
       <label for="from">From:</label>
       <input type="text" id="from" placeholder="Your name" />
+
       <label for="to">To (Jess?):</label>
       <input type="text" id="to" placeholder="Who was right?" />
+
       <label for="content">Your Moment:</label>
       <textarea id="content" rows="4" placeholder="Tell your story..." required></textarea>
+
       <button type="submit">Submit</button>
     </div>
   </form>
+
   <div id="confirmation" class="submitted-message hidden">
     ✅ Your moment was submitted!
   </div>
