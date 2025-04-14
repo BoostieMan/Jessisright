@@ -1,18 +1,14 @@
-const GITHUB_BASE = 'https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_REPO/main/data';
-const pin = '1122';
-
+const GITHUB_ENDPOINT = "https://jessisright.cloudflare.workers.dev/";
 const pinInput = document.getElementById('pin');
 const formFields = document.getElementById('formFields');
 const form = document.getElementById('momentForm');
 const confirmation = document.getElementById('confirmation');
-
+const rightList = document.getElementById('rightList');
+const quotesSection = document.getElementById('quotesSection');
 const aboutText = document.getElementById('aboutText');
 const aboutEditBox = document.getElementById('aboutEditBox');
 const editAboutBtn = document.getElementById('editAboutBtn');
 const saveAboutBtn = document.getElementById('saveAboutBtn');
-
-const rightList = document.getElementById('rightList');
-const quotesSection = document.getElementById('quotesSection');
 
 function showAdminTools() {
   editAboutBtn.classList.remove('hidden');
@@ -20,11 +16,11 @@ function showAdminTools() {
 }
 
 document.getElementById('checkPinBtn').addEventListener('click', () => {
-  if (pinInput.value === pin) {
+  if (pinInput.value === '1122') {
     formFields.classList.remove('hidden');
     showAdminTools();
   } else {
-    alert('Incorrect PIN');
+    alert("Incorrect PIN. Try again.");
   }
 });
 
@@ -45,25 +41,18 @@ form.addEventListener('submit', async (e) => {
   const newItem = { content, from, to };
 
   try {
-    // Step 1: Fetch current data from GitHub
     const fetchRes = await fetch(`${GITHUB_ENDPOINT}${filename}`);
     const existing = fetchRes.ok ? await fetchRes.json() : [];
-
-    // Step 2: Add new item
     existing.push(newItem);
 
-    // Step 3: Push updated list back to GitHub
     const saveRes = await fetch(`${GITHUB_ENDPOINT}${filename}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(existing)
     });
 
-    if (!saveRes.ok) {
-      throw new Error(await saveRes.text());
-    }
+    if (!saveRes.ok) throw new Error(await saveRes.text());
 
-    // Step 4: Reflect new item on the site immediately
     const el = document.createElement(type === 'Quotes' ? 'blockquote' : 'li');
     el.textContent = `"${content}" – ${to || "Jess"}${from ? " (submitted by " + from + ")" : ""}`;
     (type === 'Quotes' ? quotesSection : rightList).appendChild(el);
@@ -77,7 +66,6 @@ form.addEventListener('submit', async (e) => {
     alert("Failed to submit. Check console.");
   }
 });
-
 
 editAboutBtn.addEventListener('click', () => {
   aboutEditBox.value = aboutText.textContent;
@@ -108,30 +96,61 @@ saveAboutBtn.addEventListener('click', async () => {
   }
 });
 
-
-async function fetchJSON(file) {
-  const res = await fetch(`${GITHUB_BASE}/${file}`);
-  return res.json();
+async function fetchData(file) {
+  const res = await fetch(`${GITHUB_ENDPOINT}${file}`);
+  return res.ok ? await res.json() : [];
 }
 
 async function loadSiteContent() {
-  const about = await fetchJSON('about.json');
-  if (about?.content) aboutText.textContent = about.content;
+  const about = await fetchData("about.json");
+  const quotes = await fetchData("quotes.json");
+  const rightItems = await fetchData("rightlist.json");
 
-  const right = await fetchJSON('rightlist.json');
+  if (about?.[0]?.content) aboutText.textContent = about[0].content;
+
   rightList.innerHTML = '';
-  right.forEach(entry => {
-    const li = document.createElement('li');
-    li.innerHTML = `"${entry.content}" – ${entry.to || 'Jess'}${entry.from ? ' (submitted by ' + entry.from + ')' : ''}`;
+  rightItems.forEach((item, i) => {
+    const li = document.createElement("li");
+    li.innerHTML = `"${item.content}" – ${item.to || "Jess"}${item.from ? " (submitted by " + item.from + ")" : ""}` +
+                    ` <button class="deletable hidden" data-type="RightList" data-index="${i}">🗑️</button>`;
     rightList.appendChild(li);
   });
 
-  const quotes = await fetchJSON('quotes.json');
   quotesSection.innerHTML = '';
-  quotes.forEach(entry => {
-    const block = document.createElement('blockquote');
-    block.innerHTML = `"${entry.content}" – ${entry.to || 'Jess'}`;
-    quotesSection.appendChild(block);
+  quotes.forEach((q, i) => {
+    const bq = document.createElement("blockquote");
+    bq.innerHTML = `"${q.content}" – ${q.to || "Jess"} <button class="deletable hidden" data-type="Quotes" data-index="${i}">🗑️</button>`;
+    quotesSection.appendChild(bq);
+  });
+
+  if (pinInput.value === '1122') showAdminTools();
+
+  document.querySelectorAll('.deletable').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const index = parseInt(btn.dataset.index);
+      const type = btn.dataset.type;
+      const file = type === "RightList" ? "rightlist.json" : "quotes.json";
+
+      if (!confirm("Are you sure you want to delete this item?")) return;
+
+      try {
+        const res = await fetch(`${GITHUB_ENDPOINT}${file}`);
+        const items = res.ok ? await res.json() : [];
+        items.splice(index, 1);
+
+        const saveRes = await fetch(`${GITHUB_ENDPOINT}${file}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(items)
+        });
+
+        if (!saveRes.ok) throw new Error(await saveRes.text());
+        await loadSiteContent();
+      } catch (err) {
+        console.error("Failed to delete:", err);
+        alert("Delete failed. Check console.");
+      }
+    });
   });
 }
 
