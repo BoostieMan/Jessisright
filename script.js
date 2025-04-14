@@ -1,4 +1,4 @@
-const GITHUB_ENDPOINT = "https://jessisright.cloudflare.workers.dev/";
+const GITHUB_ENDPOINT = "https://jessisrighttest.almuslimllah.workers.dev/";
 const pinInput = document.getElementById('pin');
 const formFields = document.getElementById('formFields');
 const form = document.getElementById('momentForm');
