@@ -1,18 +1,19 @@
 :root {
   --green-dark: #2e7d32;
   --green-light: #66bb6a;
-  --green-hover: #256429;
-  --gray-bg: #f3f4f6;
-  --gray-border: #d1d5db;
-  --gray-text: #374151;
+  --green-hover: #43a047;
+  --gray-dark: #1f2937;
+  --gray-medium: #374151;
+  --gray-light: #4b5563;
   --white: #ffffff;
-  --danger-red: #b91c1c;
+  --danger-red: #ef4444;
+  --border-gray: #6b7280;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: var(--gray-bg);
-  color: var(--gray-text);
+  background-color: var(--gray-dark);
+  color: var(--white);
   margin: 0;
   padding: 0;
   line-height: 1.6;
@@ -23,7 +24,7 @@ header {
   color: var(--white);
   text-align: center;
   padding: 3rem 1rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 nav {
@@ -48,34 +49,39 @@ section {
   max-width: 800px;
   margin: auto;
   padding: 2rem;
+  border-bottom: 1px solid var(--border-gray);
 }
 
 h2 {
   border-bottom: 2px solid var(--green-light);
   padding-bottom: 0.5rem;
   margin-top: 2rem;
-  color: var(--green-dark);
+  color: var(--green-light);
 }
 
 form {
-  background: var(--white);
-  border: 1px solid var(--gray-border);
+  background: var(--gray-medium);
+  border: 1px solid var(--border-gray);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-input,
-select,
-textarea,
-button {
+input, select, textarea, button {
   width: 100%;
   padding: 0.75rem;
   margin-top: 0.75rem;
   border-radius: 6px;
-  border: 1px solid var(--gray-border);
+  border: 1px solid var(--border-gray);
   font-size: 1rem;
   box-sizing: border-box;
+  background-color: var(--gray-light);
+  color: var(--white);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
 }
 
 textarea {
@@ -83,16 +89,20 @@ textarea {
 }
 
 button {
-  background-color: var(--green-dark);
+  background: linear-gradient(to right, var(--green-dark), var(--green-hover));
   color: var(--white);
-  font-weight: bold;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 button:hover {
-  background-color: var(--green-hover);
+  transform: scale(1.01);
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 .hidden {
@@ -101,11 +111,11 @@ button:hover {
 
 .submitted-message {
   margin-top: 1rem;
-  background-color: #e8f5e9;
+  background-color: rgba(102, 187, 106, 0.2);
   padding: 1rem;
   border-radius: 6px;
-  border: 1px solid #c8e6c9;
-  color: #1b5e20;
+  border: 1px solid var(--green-light);
+  color: var(--green-light);
   font-weight: 500;
 }
 
@@ -119,12 +129,17 @@ footer {
 }
 
 blockquote {
-  background-color: var(--white);
+  background-color: var(--gray-medium);
   padding: 1rem;
   border-left: 4px solid var(--green-light);
   margin: 1rem 0;
   border-radius: 6px;
   position: relative;
+  transition: box-shadow 0.2s ease;
+}
+
+blockquote:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 ul {
@@ -133,15 +148,19 @@ ul {
 }
 
 ul li {
-  background: var(--white);
+  background: var(--gray-medium);
   margin: 0.5rem 0;
   padding: 0.75rem 1rem;
-  border: 1px solid var(--gray-border);
+  border: 1px solid var(--border-gray);
   border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: box-shadow 0.2s ease;
+}
+
+ul li:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 ul li button,
@@ -158,7 +177,7 @@ blockquote button {
 
 ul li button:hover,
 blockquote button:hover {
-  color: #7f1d1d;
+  color: #dc2626;
 }
 
 @media (max-width: 600px) {
