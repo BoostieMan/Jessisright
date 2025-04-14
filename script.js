@@ -13,7 +13,11 @@ const saveAboutBtn = document.getElementById('saveAboutBtn');
 function showAdminTools() {
   editAboutBtn.classList.remove('hidden');
   document.querySelectorAll('.deletable').forEach(el => el.classList.remove('hidden'));
+
+  // 🧠 Show Jess Mode Easter Egg
+  document.getElementById('jessModeEasterEgg')?.classList.remove('hidden');
 }
+
 
 document.getElementById('checkPinBtn').addEventListener('click', () => {
   if (pinInput.value === '1122') {
