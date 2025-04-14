@@ -5,79 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jess Is Right</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f0fdf4;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
-    header {
-      background-color: #34d399;
-      color: white;
-      text-align: center;
-      padding: 3rem 1rem;
-    }
-    nav {
-      background: #e0f2f1;
-      padding: 1rem;
-      text-align: center;
-    }
-    nav a {
-      margin: 0 1rem;
-      color: #065f46;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    section {
-      padding: 2rem;
-      max-width: 800px;
-      margin: auto;
-    }
-    footer {
-      background-color: #34d399;
-      color: white;
-      text-align: center;
-      padding: 1rem;
-      margin-top: 2rem;
-    }
-    h2 {
-      border-bottom: 2px solid #d1fae5;
-      padding-bottom: 0.5rem;
-    }
-    form {
-      background: #ffffff;
-      border: 1px solid #d1fae5;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-top: 1rem;
-    }
-    input, select, textarea, button {
-      width: 100%;
-      padding: 0.75rem;
-      margin-top: 0.75rem;
-      border-radius: 5px;
-      border: 1px solid #cbd5e1;
-      font-size: 1rem;
-    }
-    button {
-      background-color: #34d399;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-    .submitted-message {
-      margin-top: 1rem;
-      background-color: #ecfdf5;
-      padding: 1rem;
-      border-radius: 5px;
-      border: 1px solid #a7f3d0;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -95,21 +23,19 @@
 
 <section id="about">
   <h2>About Jess <button id="editAboutBtn" class="hidden">✏️ Edit</button></h2>
-  <p id="aboutText">Jess is your go-to guru for everything from life hacks to bold predictions. This site celebrates her legendary rightness, because let's face it—she's NEVER wrong.</p>
-  <textarea id="aboutEditBox" class="hidden" rows="4" style="width:100%; margin-top:1rem;"></textarea>
-  <button id="saveAboutBtn" class="hidden" style="margin-top: 0.5rem;">💾 Save</button>
+  <p id="aboutText"></p>
+  <textarea id="aboutEditBox" class="hidden" rows="4"></textarea>
+  <button id="saveAboutBtn" class="hidden">💾 Save</button>
 </section>
 
 <section id="list">
   <h2>The Right List</h2>
-  <ul>
-    <li>"You know I'm always right!" – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></li>
-  </ul>
+  <ul id="rightList"></ul>
 </section>
 
 <section id="quotes">
   <h2>Quotes</h2>
-  <blockquote>“I'm always right.” – Jess <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button></blockquote>
+  <div id="quotesSection"></div>
 </section>
 
 <section id="submit">
@@ -140,193 +66,9 @@
 </section>
 
 <footer>
-  <p>&copy; 2025 Jess Is Right • <span id="version">{{VERSION}}</span></p>
+  <p>&copy; 2025 Jess Is Right</p>
 </footer>
 
-<script>
-const pinInput = document.getElementById('pin');
-const formFields = document.getElementById('formFields');
-const form = document.getElementById('momentForm');
-const confirmation = document.getElementById('confirmation');
-
-const rightList = document.querySelector('#list ul');
-const quotesSection = document.querySelector('#quotes');
-
-const aboutText = document.getElementById('aboutText');
-const aboutEditBox = document.getElementById('aboutEditBox');
-const editAboutBtn = document.getElementById('editAboutBtn');
-const saveAboutBtn = document.getElementById('saveAboutBtn');
-
-function showAdminTools() {
-  editAboutBtn.classList.remove('hidden');
-  Array.from(document.querySelectorAll('.deletable')).forEach(el => el.classList.remove('hidden'));
-}
-
-function checkPinUnlock() {
-  if (pinInput.value === '1122') {
-    formFields.classList.remove('hidden');
-    showAdminTools();
-  } else {
-    formFields.classList.add('hidden');
-  }
-}
-
-
-const checkPinBtn = document.getElementById('checkPinBtn');
-
-checkPinBtn.addEventListener('click', () => {
-  if (pinInput.value === '1122') {
-    formFields.classList.remove('hidden');
-    showAdminTools();
-  } else {
-    alert("Incorrect PIN. Try again.");
-  }
-});
-
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const type = document.getElementById('type').value;
-  const from = document.getElementById('from').value || '';
-  const to = document.getElementById('to').value || '';
-  const content = document.getElementById('content').value || '';
-
-  if (!type || !content) {
-    alert("Please choose a category and enter content.");
-    return;
-  }
-
-  const payload = { type, from, to, content };
-
-  try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbyqQDbKgXwxiW8UpjMCLsZXBIdpofxS5lfKSof2dJWHPCYPdXlfCqksFAtbndkuWpzd8A/exec', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    // If your script is set to "no-cors" access, use response.text()
-    const resultText = await response.text();
-    console.log("Response from server:", resultText);
-
-    form.reset();
-    formFields.classList.add('hidden');
-    confirmation.classList.remove('hidden');
-    loadSiteContent();
-  } catch (error) {
-    alert("Failed to submit. Check the console for details.");
-    console.error('Fetch error:', error);
-  }
-});
-
-
-
-editAboutBtn.addEventListener('click', () => {
-  aboutEditBox.value = aboutText.textContent;
-  aboutEditBox.classList.remove('hidden');
-  saveAboutBtn.classList.remove('hidden');
-  editAboutBtn.classList.add('hidden');
-});
-
-saveAboutBtn.addEventListener('click', () => {
-  const updatedAbout = aboutEditBox.value;
-  aboutText.textContent = updatedAbout;
-  aboutEditBox.classList.add('hidden');
-  saveAboutBtn.classList.add('hidden');
-  editAboutBtn.classList.remove('hidden');
-fetch('https://script.google.com/macros/s/AKfycbyqQDbKgXwxiW8UpjMCLsZXBIdpofxS5lfKSof2dJWHPCYPdXlfCqksFAtbndkuWpzd8A/exec', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(payload)
-})
-.then(response => response.json())
-.then(data => {
-  // Handle success
-})
-.catch(error => {
-  // Handle error
-});
-});
-
-async function loadSiteContent() {
-  const url = "https://script.google.com/macros/s/AKfycbyqQDbKgXwxiW8UpjMCLsZXBIdpofxS5lfKSof2dJWHPCYPdXlfCqksFAtbndkuWpzd8A/exec";
-  try {
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data.AboutJess?.length) aboutText.textContent = data.AboutJess[0].content;
-
-    rightList.innerHTML = "";
-    data.RightList.forEach(item => {
-      const li = document.createElement("li");
-      li.innerHTML = "${item.content}" – ${item.to || "Jess"}${item.from ? " (submitted by " + item.from + ")" : ""} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>;
-      rightList.appendChild(li);
-    });
-
-    quotesSection.querySelectorAll("blockquote").forEach(el => el.remove());
-    data.Quotes.forEach(quote => {
-      const bq = document.createElement("blockquote");
-      bq.innerHTML = "${quote.content}" – ${quote.to || "Jess"} <button class="deletable hidden" onclick="this.parentElement.remove()">🗑️</button>;
-      quotesSection.appendChild(bq);
-    });
-
-    if (pinInput.value === '1122') showAdminTools();
-  } catch (err) {
-    console.error("Failed to load content from Sheets:", err);
-  }
-}
-
-function seedSiteContentToSheets() {
-  const url = "https://script.google.com/macros/s/AKfycbyqQDbKgXwxiW8UpjMCLsZXBIdpofxS5lfKSof2dJWHPCYPdXlfCqksFAtbndkuWpzd8A/exec";
-
-  // Push About Jess (just overwrite A2)
-  const about = aboutText.textContent.trim();
-  if (about) {
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'AboutJess', content: about })
-    });
-  }
-
-  // Push all RightList items
-  document.querySelectorAll("#list ul li").forEach(li => {
-    const raw = li.textContent.replace("🗑️", "").trim();
-    const match = raw.match(/^"(.*)" – (.*?)( \(submitted by (.*)\))?$/);
-    const content = match?.[1] || raw;
-    const to = match?.[2] || "Jess";
-    const from = match?.[4] || "";
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: "RightList", content, from, to })
-    });
-  });
-
-  // Push all Quotes
-  document.querySelectorAll("#quotes blockquote").forEach(bq => {
-    const raw = bq.textContent.replace("🗑️", "").trim();
-    const match = raw.match(/^"(.*)" – (.*)$/);
-    const content = match?.[1] || raw;
-    const to = match?.[2] || "Jess";
-    fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: "Quotes", content, from: "", to })
-    });
-  });
-}
-
-
-window.addEventListener("DOMContentLoaded", async () => {
-  await loadSiteContent();
-  seedSiteContentToSheets(); // always push visible stuff to Sheets
-});
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
