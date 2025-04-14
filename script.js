@@ -63,6 +63,14 @@ form.addEventListener('submit', async (e) => {
 
     form.reset();
     formFields.classList.add('hidden');
+
+// 🎉 Confetti burst!
+confetti({
+  particleCount: 150,
+  spread: 70,
+  origin: { y: 0.6 }
+});
+
     confirmation.classList.remove('hidden');
 
   } catch (err) {
