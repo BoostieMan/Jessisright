@@ -152,6 +152,16 @@ async function loadSiteContent() {
       }
     });
   });
+
+  try {
+    const versionRes = await fetch(`${GITHUB_ENDPOINT}version.json`);
+    const versionData = await versionRes.json();
+    document.getElementById('version').textContent = `v${versionData.version}`;
+    document.getElementById('hash').textContent = `#${versionData.hash}`;
+  } catch (e) {
+    console.warn("Version info not available");
+  }
 }
+
 
 window.addEventListener('DOMContentLoaded', loadSiteContent);
