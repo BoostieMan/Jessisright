@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const htmlFile = 'index.html';
-const versionFile = 'version.txt';
+const versionFile = 'data/version.json';
 const sha = process.env.GITHUB_SHA?.substring(0, 7) || 'unknown';
 
 const version = fs.existsSync(versionFile) ? fs.readFileSync(versionFile, 'utf8').trim() : '0.0';
