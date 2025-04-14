@@ -188,29 +188,27 @@ confetti({
   colors: ['#2e7d32', '#ffffff']
 });
 
-.jess-easter-egg {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
+.jess-easter-egg-inline {
   background: #2e7d32;
   color: white;
   padding: 1rem 1.25rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  z-index: 999;
-  font-size: 0.95rem;
-  max-width: 240px;
-  animation: popUp 0.4s ease-out;
+  margin: 2rem auto 1rem auto;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  font-size: 1rem;
+  text-align: center;
+  animation: fadeUp 0.3s ease-out;
 }
 
-@keyframes popUp {
-  0% {
+@keyframes fadeUp {
+  from {
     opacity: 0;
-    transform: translateY(20px) scale(0.95);
+    transform: translateY(10px);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
   }
 }
 
