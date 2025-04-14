@@ -50,12 +50,28 @@ editAboutBtn.addEventListener('click', () => {
   editAboutBtn.classList.add('hidden');
 });
 
-saveAboutBtn.addEventListener('click', () => {
-  aboutText.textContent = aboutEditBox.value;
-  aboutEditBox.classList.add('hidden');
-  saveAboutBtn.classList.add('hidden');
-  editAboutBtn.classList.remove('hidden');
+saveAboutBtn.addEventListener('click', async () => {
+  const updatedContent = aboutEditBox.value.trim();
+  const payload = JSON.stringify([{ content: updatedContent }]);
+
+  const res = await fetch(`${GITHUB_ENDPOINT}about.json`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: payload
+  });
+
+  if (res.ok) {
+    aboutText.textContent = updatedContent;
+    aboutEditBox.classList.add('hidden');
+    saveAboutBtn.classList.add('hidden');
+    editAboutBtn.classList.remove('hidden');
+    alert('Saved successfully!');
+  } else {
+    alert('Save failed!');
+    console.error(await res.text());
+  }
 });
+
 
 async function fetchJSON(file) {
   const res = await fetch(`${GITHUB_BASE}/${file}`);
