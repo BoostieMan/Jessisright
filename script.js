@@ -152,5 +152,6 @@ async function loadSiteContent() {
       }
     });
   });
-}
+} 
+
 window.addEventListener('DOMContentLoaded', loadSiteContent);
