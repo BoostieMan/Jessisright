@@ -30,18 +30,54 @@ document.getElementById('checkPinBtn').addEventListener('click', () => {
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const type = document.getElementById('type').value;
-  const from = document.getElementById('from').value;
-  const to = document.getElementById('to').value;
-  const content = document.getElementById('content').value;
+  const from = document.getElementById('from').value || '';
+  const to = document.getElementById('to').value || '';
+  const content = document.getElementById('content').value || '';
 
-  const newEntry = { from, to, content };
+  if (!type || !content) {
+    alert("Please choose a category and enter content.");
+    return;
+  }
 
-  console.log(`[DEV] Would save to ${type}.json`, newEntry);
-  confirmation.classList.remove('hidden');
-  form.reset();
-  formFields.classList.add('hidden');
+  const filename = type === "RightList" ? "rightlist.json" : "quotes.json";
+  const newItem = { content, from, to };
+
+  try {
+    // Step 1: Fetch current data from GitHub
+    const fetchRes = await fetch(`${GITHUB_ENDPOINT}${filename}`);
+    const existing = fetchRes.ok ? await fetchRes.json() : [];
+
+    // Step 2: Add new item
+    existing.push(newItem);
+
+    // Step 3: Push updated list back to GitHub
+    const saveRes = await fetch(`${GITHUB_ENDPOINT}${filename}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(existing)
+    });
+
+    if (!saveRes.ok) {
+      throw new Error(await saveRes.text());
+    }
+
+    // Step 4: Reflect new item on the site immediately
+    const el = document.createElement(type === 'Quotes' ? 'blockquote' : 'li');
+    el.textContent = `"${content}" – ${to || "Jess"}${from ? " (submitted by " + from + ")" : ""}`;
+    (type === 'Quotes' ? quotesSection : rightList).appendChild(el);
+
+    form.reset();
+    formFields.classList.add('hidden');
+    confirmation.classList.remove('hidden');
+
+  } catch (err) {
+    console.error("Submit failed:", err);
+    alert("Failed to submit. Check console.");
+  }
 });
+
 
 editAboutBtn.addEventListener('click', () => {
   aboutEditBox.value = aboutText.textContent;
