@@ -153,19 +153,4 @@ async function loadSiteContent() {
     });
   });
 
-try {
-  const versionRes = await fetch(`${GITHUB_ENDPOINT}version.json`);
-  const versionData = await versionRes.json();
-
-  const versionEl = document.getElementById('version');
-  const hashEl = document.getElementById('hash');
-
-  if (versionEl) versionEl.textContent = `v${versionData.version}`;
-  if (hashEl) hashEl.textContent = `#${versionData.hash}`;
-} catch (e) {
-  console.warn("Version info not available");
-}
-
-
-
 window.addEventListener('DOMContentLoaded', loadSiteContent);
