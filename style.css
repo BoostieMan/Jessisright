@@ -128,26 +128,14 @@ footer {
   font-size: 0.9rem;
 }
 
-blockquote {
-  background-color: var(--gray-medium);
-  padding: 1rem;
-  border-left: 4px solid var(--green-light);
-  margin: 1rem 0;
-  border-radius: 6px;
-  position: relative;
-  transition: box-shadow 0.2s ease;
-}
-
-blockquote:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-
-ul {
+/* ✅ Unified style for Right List + Quotes */
+ul, #rightList, #quotesSection {
   list-style: none;
   padding-left: 0;
 }
 
-ul li {
+ul li,
+blockquote {
   background: var(--gray-medium);
   margin: 0.5rem 0;
   padding: 0.75rem 1rem;
@@ -159,10 +147,16 @@ ul li {
   transition: box-shadow 0.2s ease;
 }
 
-ul li:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+ul li:hover,
+blockquote:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
+blockquote {
+  border-left: none;
+}
+
+/* Delete buttons (🗑️ icons) */
 ul li button,
 blockquote button {
   background: transparent;
